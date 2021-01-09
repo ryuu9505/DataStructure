@@ -65,7 +65,7 @@ void insertion_sort (int list[], int n)
 }
 
 // 최솟값을 찾아서 선택한 자리에 넣음
-void selection_sort(int list, int n)
+void selection_sort(int list[], int n)
 {
   int i, j, least, temp;
   
