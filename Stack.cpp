@@ -1,17 +1,8 @@
 #include <iostream>
 #include <string>
+#define STACK_MAX_SIZE 100000
 using namespace std;
 
-
-template <typename Object>
-class Stack
-{
-	int size() const;
-	bool isEmpty() const;
-	const Object& top() throw(StackEmptyException);
-	void push(const Object& obj) throw(StackFullException);
-	Object pop() throw(StackEmptyException);
-};
 
 class RuntimeException
 {
@@ -36,7 +27,7 @@ inline std::ostream& operator<<(std::ostream& out, const RuntimeException& e)
 class StackEmptyException : public RuntimeException
 {
 public:
-	StackEmptyException(const string& err) : RuntimeException(err){}
+	StackEmptyException(const string& err) : RuntimeException(err) {}
 };
 
 class StackFullException : public RuntimeException
@@ -46,30 +37,96 @@ public:
 };
 
 template <typename Object>
+class Stack
+{
+private:
+	int idx;
+	Object arr[STACK_MAX_SIZE];
+public:
+	Stack()
+	{
+		idx = 0;		
+	}
+	int size() const;
+	bool isEmpty() const;
+	const Object& top();
+	void push(const Object& obj);
+	Object pop();
+};
+
+
+template <typename Object>
 int Stack<Object>::size() const
 {
-
+	return idx;
 }
 
 template <typename Object>
 bool Stack<Object>::isEmpty() const
 {
-
+	return !(idx);
 }
 
 template <typename Object>
-const Object& Stack<Object>::top() throw(StackEmptyException)
+const Object& Stack<Object>::top()
 {
-
+	if (idx == 0)
+		throw StackEmptyException("-1");
+	return arr[idx - 1];
 }
 
 template <typename Object>
-Object Stack<Object>::pop() throw(StackEmptyException)
+Object Stack<Object>::pop()
 {
-
+	if (idx == 0)
+		throw StackEmptyException("-1");
+	return arr[--idx];
 }
 template <typename Object>
-void Stack<Object>::push(const Object& obj) throw(StackFullException)
+void Stack<Object>::push(const Object& obj)
 {
+	if (idx == STACK_MAX_SIZE)
+		throw StackFullException("FULL");
+	arr[idx++] = obj;
+}
 
+int main()
+{
+	Stack<int> st;
+	int n, num;
+	string str;
+	cin >> n;
+	
+	for (int i = 0; i < n; i++)
+	{
+		cin >> str;
+		try
+		{
+			if (str == "size")
+			{
+				cout << st.size() << endl;
+			}
+			else if (str == "empty")
+			{
+				cout << st.isEmpty() << endl;
+			}
+			else if (str == "top")
+			{
+				cout << st.top() << endl;
+			}
+			else if (str == "pop")
+			{
+				cout << st.pop() << endl;
+			}
+			else if (str == "push")
+			{
+				cin >> num;
+				st.push(num);
+			}
+		}
+		catch (RuntimeException& expn)
+		{
+			cout << expn << endl;
+		}
+	}
 }
